@@ -20,7 +20,7 @@ if not GEMINI_API_KEY:
 
 genai.configure(api_key=GEMINI_API_KEY)
 # 무료 티어에서 사용 가능한 모델 (2026년 기준 Flash 계열). 만료/변경 시 아래 이름만 바꾸면 됩니다.
-MODEL_NAME = "gemini-2.5-flash"
+MODEL_NAME = "gemini-flash-latest"
 model = genai.GenerativeModel(MODEL_NAME)
 
 SYSTEM_INSTRUCTION = """너는 공기업 계약부서의 AI 계약 검토 보조자 '계약이'다.
