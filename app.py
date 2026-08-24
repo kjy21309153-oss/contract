@@ -184,14 +184,14 @@ with st.sidebar:
 current = st.session_state.conversations[st.session_state.current_conv]
 
 if not current["messages"]:
-    st.markdown("### 검토할 문서를 올리거나 상황을 입력하세요")
+    st.markdown("### 검토할 문서를 올리거나 상황을 입력하세요.")
     st.caption("좌측의 법령·규정을 근거로 검토해드립니다.")
 else:
     for msg in current["messages"]:
         with st.chat_message("user" if msg["role"] == "user" else "assistant"):
             st.markdown(msg["text"])
 
-user_input = st.chat_input("문서 내용을 붙여넣거나 질문을 입력하세요")
+user_input = st.chat_input("문서 내용을 붙여넣거나 질문을 입력하세요.")
 
 if user_input:
     current["messages"].append({"role": "user", "text": user_input})
