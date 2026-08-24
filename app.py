@@ -185,7 +185,7 @@ current = st.session_state.conversations[st.session_state.current_conv]
 
 if not current["messages"]:
     st.markdown("### 검토할 문서를 올리거나 상황을 입력하세요")
-    st.caption("좌측에서 법령·규정을 먼저 올려두면, 그 내용을 근거로 검토해드립니다.")
+    st.caption("좌측의 법령·규정을 근거로 검토해드립니다.")
 else:
     for msg in current["messages"]:
         with st.chat_message("user" if msg["role"] == "user" else "assistant"):
