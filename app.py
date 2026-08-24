@@ -154,8 +154,8 @@ with st.sidebar:
         st.success(f"{len(uploaded)}개 문서 반영 완료")
 
     with st.expander(f"반영된 문서 보기 ({len(st.session_state.knowledge_base)}개)", expanded=False):
-        box_height = st.slider("목록 칸 높이(px)", min_value=60, max_value=300,
-                                value=70, step=10, key="doc_box_height")
+        box_height = 300
+        
         with st.container(height=box_height):
             for name in list(st.session_state.knowledge_base):
                 c1, c2 = st.columns([5, 1])
