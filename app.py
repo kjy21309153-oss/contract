@@ -10,7 +10,7 @@ import re
 # =========================================================
 # 기본 설정
 # =========================================================
-st.set_page_config(page_title="계약이 Ver.3", page_icon="⚖️", layout="wide")
+st.set_page_config(page_title="조달계약 검토 AI", page_icon="⚖️", layout="wide")
 
 GEMINI_API_KEY = st.secrets.get("GEMINI_API_KEY", "")
 if not GEMINI_API_KEY:
@@ -23,7 +23,7 @@ genai.configure(api_key=GEMINI_API_KEY)
 MODEL_NAME = "gemini-2.5-flash"
 model = genai.GenerativeModel(MODEL_NAME)
 
-SYSTEM_INSTRUCTION = """너는 공기업 계약부서의 AI 계약 검토 보조자 '계약이'다.
+SYSTEM_INSTRUCTION = """너는 공기업 계약부서의 AI 계약 검토 보조자 '조달계약 검토 AI'다.
 사용자가 올린 법령/규정/표준품셈 등 참고자료(지식창고)를 근거로만 답한다.
 문서를 검토할 때는 아래 형식을 따른다:
 1. 문서 요약 (무슨 계약 건인지)
@@ -118,7 +118,7 @@ def search_relevant_chunks(query, top_k=4):
 # 좌측 사이드바: 파일 목록(상단) + 새 대화/이력(하단)
 # =========================================================
 with st.sidebar:
-    st.markdown("### ⚖️ 계약이 Ver.3")
+    st.markdown("### ⚖️ 계약이")
 
     header_col, refresh_col = st.columns([5, 1])
     with header_col:
