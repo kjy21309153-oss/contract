@@ -139,7 +139,7 @@ def search_relevant_chunks(query, top_k=4):
 with st.sidebar:
     st.markdown("### ⚖️ 조달계약 검토 도우미")
 
-    header_col, refresh_col = st.columns([5, 1])
+    header_col, refresh_col = st.columns([2, 1])
     with header_col:
         st.markdown("#### 📎 지식창고 (법령·규정)")
     with refresh_col:
