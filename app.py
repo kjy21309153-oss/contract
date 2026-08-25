@@ -54,10 +54,8 @@ client = genai.Client(api_key=GEMINI_API_KEY)
 # gemini-3.6-flash / gemini-3.5-flash 같은 최신 비-lite 모델은 무료 한도가 매우 작아
 # 후보 목록에서 뺐다. 필요하면 아래 목록 맨 앞에 추가해서 다시 시도해볼 수 있다.
 MODEL_CANDIDATES = [
-    "gemini-2.5-flash-lite",
     "gemini-3.1-flash-lite",
     "gemini-3.5-flash-lite",
-    "gemini-2.5-flash",
     "gemini-flash-latest",
 ]
 
