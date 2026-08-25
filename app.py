@@ -157,7 +157,7 @@ def search_relevant_chunks(query, top_k=4):
 with st.sidebar:
     st.markdown("### ⚖️ 조달계약 검토 도우미")
 
-    header_col, refresh_col = st.columns([5, 1])
+    header_col, refresh_col = st.columns([4, 1])
     with header_col:
         st.markdown("#### 📎 지식창고 (법령·규정)")
     with refresh_col:
@@ -172,8 +172,7 @@ with st.sidebar:
         st.success(f"{len(uploaded)}개 문서 반영 완료")
 
     with st.expander(f"반영된 문서 보기 ({len(st.session_state.knowledge_base)}개)", expanded=False):
-        box_height = st.slider("목록 칸 높이(px)", min_value=60, max_value=300,
-                                value=70, step=10, key="doc_box_height")
+        box_height = 300
         with st.container(height=box_height):
             for name in list(st.session_state.knowledge_base):
                 c1, c2 = st.columns([5, 1])
