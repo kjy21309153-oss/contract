@@ -29,6 +29,15 @@ st.markdown("""
     border-color: #6b7280 !important;
     color: #ffffff !important;
 }
+[data-testid="stChatInput"],
+[data-testid="stChatInput"]:hover,
+[data-testid="stChatInput"]:focus-within,
+[data-testid="stChatInput"] textarea:hover,
+[data-testid="stChatInput"] textarea:focus {
+    border-color: #9ca3af !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -45,7 +54,8 @@ client = genai.Client(api_key=GEMINI_API_KEY)
 def get_working_model_name():
     """구글이 모델 이름을 바꾸거나 없애도 앱이 안 죽도록,
     여러 후보 이름 중 실제로 쓸 수 있는 걸 자동으로 찾는다."""
-    candidates = ["gemini-flash-latest", "gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"]
+    candidates = ["gemini-flash-latest", "gemini-3.5-flash-lite", "gemini-3.1-flash-lite",
+                    "gemini-2.5-flash-lite", "gemini-2.5-flash"]
     try:
         available = {m.name.split("/")[-1] for m in client.models.list()}
         for name in candidates:
@@ -273,6 +283,8 @@ if not current["messages"]:
     st.markdown("### 검토할 문서를 올리거나 상황을 입력하세요")
     st.caption("좌측에서 법령·규정을 먼저 올려두면, 그 내용을 근거로 검토해드립니다.")
 
+MODEL_CANDIDATES = ["gemini-3.5-flash-lite", "gemini-3.1-flash-lite",
+                    "gemini-2.5-flash-lite", "gemini-2.5-flash"]
 
 def call_ai(context_messages, user_text, file_text):
     """context_messages 이전까지의 대화 이력을 바탕으로, 이번 사용자 입력에 대한 AI 답변을 만든다."""
@@ -289,26 +301,30 @@ def call_ai(context_messages, user_text, file_text):
         system_instruction=SYSTEM_INSTRUCTION,
         tools=[SEARCH_TOOL],
     )
-    chat = client.chats.create(model=MODEL_NAME, config=config, history=history)
 
+    
     prompt = (
         f"[참고자료(지식창고)]\n{context_text if context_text else '(지식창고에 문서 없음)'}\n\n"
         f"[이번에 첨부된 문서]\n{file_text if file_text else '(첨부 없음)'}\n\n"
         f"[사용자 질문/요청]\n{user_text if user_text else '(첨부 문서를 검토해줘)'}"
     )
 
-    try:
-        response = chat.send_message(prompt)
-        return response.text
-    except Exception as e:
-        error_str = str(e)
-        if "RESOURCE_EXHAUSTED" in error_str or "429" in error_str:
-            return (
-                "⏳ 지금 무료 사용량 한도를 넘었습니다. 짧은 시간에 요청이 몰렸을 때(분당 한도) "
-                "잠시 후 다시 보내면 되고, 오늘 사용량 자체(일일 한도)를 다 썼다면 내일 다시 "
-                "시도해주세요. 사용량은 https://ai.dev/rate-limit 에서 확인할 수 있습니다."
-            )
-        return f"⚠️ 답변 생성 중 오류가 발생했습니다: {e}"
+    last_error = None
+    for model_name in MODEL_CANDIDATES:
+        try:
+            chat = client.chats.create(model=model_name, config=config, history=history)
+            response = chat.send_message(prompt)
+            return response.text  # 성공하면 그 자리에서 바로 반환 (다음 후보 시도 안 함)
+        except Exception as e:
+            error_str = str(e)
+            last_error = e
+            if "RESOURCE_EXHAUSTED" in error_str or "429" in error_str:
+                continue  # 이 모델만 막혔으니 다음 후보로 넘어감
+            else:
+                break  # 한도 문제가 아닌 다른 오류면 재시도해도 의미 없으니 중단
+
+    # 후보를 다 돌았는데도 실패한 경우
+    return f"⚠️ 지금 사용 가능한 모델이 모두 한도를 초과했습니다. 잠시 후 다시 시도해주세요. ({last_error})"
 
 
 def run_new_turn(current, user_text, file_text, file_name):
