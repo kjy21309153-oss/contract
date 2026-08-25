@@ -338,10 +338,38 @@ def run_new_turn(current, user_text, file_text, file_name):
     current["messages"].append({"role": "model", "text": answer_text})
     save_state()
 
-
-for msg in current["messages"]:
-    with st.chat_message("user" if msg["role"] == "user" else "assistant"):
-        st.markdown(msg["text"])
+# 대화 내역 출력 및 메시지 개별/쌍 삭제 기능
+i = 0
+while i < len(current["messages"]):
+    msg = current["messages"][i]
+    
+    if msg["role"] == "user":
+        # 사용자 메시지와 삭제 버튼 우측 배치
+        col1, col2 = st.columns([10, 1])
+        with col1:
+            with st.chat_message("user"):
+                st.markdown(msg["text"])
+        with col2:
+            # 해당 사용자 메시지 및 바로 뒤 AI 답변 쌍 삭제
+            if st.button("🗑️", key=f"del_pair_{i}", help="이 질문과 답변 삭제"):
+                # 현재 사용자 질문 제거
+                current["messages"].pop(i)
+                # 다음 메시지가 AI 답변이면 같이 제거
+                if i < len(current["messages"]) and current["messages"][i]["role"] == "model":
+                    current["messages"].pop(i)
+                
+                # 대화 제목 갱신 처리 (모든 대화가 지워졌을 시 '새 대화'로 리셋)
+                if not current["messages"]:
+                    current["title"] = "새 대화"
+                
+                save_state()
+                st.rerun()
+        i += 1
+    else:
+        # AI 답변 메시지 출력
+        with st.chat_message("assistant"):
+            st.markdown(msg["text"])
+        i += 1
 
 chat_value = st.chat_input(
     "문서를 첨부하거나 질문을 입력하세요",
