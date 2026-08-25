@@ -46,8 +46,8 @@ client = genai.Client(api_key=GEMINI_API_KEY)
 def get_working_model_name():
     """구글이 모델 이름을 바꾸거나 없애도 앱이 안 죽도록,
     여러 후보 이름 중 실제로 쓸 수 있는 걸 자동으로 찾는다."""
-    candidates = ["gemini-flash-latest", "gemini-3.5-flash-lite", "gemini-3.1-flash-lite",
-                    "gemini-2.5-flash-lite", "gemini-2.5-flash"]
+    candidates = ["gemini-flash-latest", "gemini-3.5-flash", "gemini-3.5-flash-lite", "gemini-3.1-flash-lite",
+                    "gemini-2.5-flash"]
     try:
         available = {m.name.split("/")[-1] for m in client.models.list()}
         for name in candidates:
@@ -275,8 +275,8 @@ if not current["messages"]:
     st.markdown("### 검토할 문서를 올리거나 상황을 입력하세요")
     st.caption("좌측에서 법령·규정을 먼저 올려두면, 그 내용을 근거로 검토해드립니다.")
 
-MODEL_CANDIDATES = ["gemini-3.5-flash-lite", "gemini-3.1-flash-lite",
-                    "gemini-2.5-flash-lite", "gemini-2.5-flash"]
+MODEL_CANDIDATES = ["gemini-flash-latest", "gemini-3.5-flash", "gemini-3.5-flash-lite", "gemini-3.1-flash-lite",
+                    "gemini-2.5-flash"]
 
 def call_ai(context_messages, user_text, file_text):
     """context_messages 이전까지의 대화 이력을 바탕으로, 이번 사용자 입력에 대한 AI 답변을 만든다."""
