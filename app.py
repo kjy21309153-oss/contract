@@ -29,6 +29,15 @@ st.markdown("""
     border-color: #6b7280 !important;
     color: #ffffff !important;
 }
+[data-testid="stChatInput"],
+[data-testid="stChatInput"]:hover,
+[data-testid="stChatInput"]:focus-within,
+[data-testid="stChatInput"] textarea:hover,
+[data-testid="stChatInput"] textarea:focus {
+    border-color: #9ca3af !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
