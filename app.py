@@ -272,7 +272,7 @@ current = st.session_state.conversations[st.session_state.current_conv]
 
 if not current["messages"]:
     st.markdown("### 검토할 문서를 올리거나 상황을 입력하세요")
-    st.caption("좌측에서 법령·규정을 먼저 올려두면, 그 내용을 근거로 검토해드립니다.")
+    st.caption("좌측의 법령·규정 내용을 근거로 검토해드립니다.")
 
 MODEL_CANDIDATES = ["gemini-flash-latest", "gemini-3.6-flash", "gemini-3.5-flash", "gemini-3.5-flash-lite", "gemini-3.1-flash-lite"]
 
